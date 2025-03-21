@@ -5,9 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Product;
 use App\Models\CronLog;
+use App\Models\User;
+use App\Notifications\ImportFailedNotification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ImportProducts extends Command
 {
@@ -26,6 +29,8 @@ class ImportProducts extends Command
 
             foreach ($fileList as $file) {
                 if (!empty($file)) {
+                    $this->info("Processing file: {$file}");
+
                     // Download and store .gz file
                     $gzFilePath = storage_path("app/{$file}");
                     file_put_contents($gzFilePath, Http::get("https://challenges.coode.sh/food/data/json/{$file}")->body());
@@ -51,12 +56,19 @@ class ImportProducts extends Command
 
             $this->info('Import completed successfully!');
         } catch (\Exception $e) {
+            Log::error("Product import failed: " . $e->getMessage(), ['exception' => $e]);
+
             // Log failure
             CronLog::create([
                 'imported_at' => $startTime,
                 'status' => 'failure',
                 'details' => $e->getMessage(),
             ]);
+
+            $user = User::where('email', "johndoe@example.com")->first();
+            if ($user) {
+                $user->notify(new ImportFailedNotification($e->getMessage()));
+            }
 
             $this->error("Import failed: " . $e->getMessage());
         }
