@@ -1,3 +1,118 @@
+# Backend Challenge 20230105 - API de Produtos
+
+Este projeto consiste em uma API RESTful desenvolvida em **Laravel 11** com integração ao banco de dados **SQLite** e autenticação via **Laravel Sanctum**. A API consome dados do [Open Food Facts](https://challenges.coode.sh/food/data/json/index.txt) para gerenciar produtos alimentícios.
+
+## 🛠️ Tecnologias Utilizadas
+- **Laravel 11**: Framework PHP para desenvolvimento backend
+- **SQLite**: Banco de dados relacional leve
+- **Laravel Sanctum**: Autenticação via API Keys
+- **PHPUnit**: Testes unitários e de integração
+
+---
+
+## 🚀 Funcionalidades Implementadas
+
+### ✅ **API de Produtos**
+- `GET /` - Status da API, com informações sobre uso de memória e último cron executado.
+- `GET /products` - Listar produtos com paginação.
+- `GET /products/{code}` - Buscar detalhes de um produto por código.
+- `PUT /products/{code}` - Atualizar detalhes de um produto.
+- `DELETE /products/{code}` - Marcar um produto como `trash`.
+
+### ✅ **Autenticação**
+- `POST /generate-api-key` - Geração de API Key para autenticação.
+- Os endpoints protegidos exigem autenticação com o cabeçalho `Authorization: Bearer {API_KEY}`.
+
+### ✅ **Sistema CRON de Importação**
+- Importação diária de dados do Open Food Facts.
+- Processamento de até 100 produtos por arquivo.
+- Controle de logs com detalhes sobre o status da importação.
+
+### ✅ **Testes Automatizados**
+- Testes de unidade e integração utilizando **PHPUnit**.
+- Testes para endpoints da API e para o sistema de importação.
+
+---
+
+## ⚙️ Como Executar o Projeto
+
+### **Pré-requisitos:**
+- PHP 8.2+
+- Composer
+- SQLite
+
+### **Passo a Passo:**
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/pedroalano/products-parser-20250317.git
+cd products-parser-20250317
+```
+
+2. Configure o `.env`:
+```bash
+cp .env.example .env
+```
+Certifique-se de que o banco de dados SQLite esteja configurado corretamente:
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
+
+3. Crie o arquivo do banco SQLite:
+```bash
+mkdir -p database
+touch database/database.sqlite
+```
+
+4. Instale as dependências:
+```bash
+composer install
+```
+
+5. Execute as migrações:
+```bash
+php artisan migrate
+```
+
+6. Inicie o servidor:
+```bash
+php artisan serve
+```
+
+7. Acesse a API:
+- API: `http://localhost:8000/api`
+- Documentação: `http://localhost:8000/api/documentation`
+
+---
+
+## 🧪 Testes
+Para executar os testes:
+```bash
+php artisan test
+```
+
+## 🚀 Postman
+Para executar os testes:
+```bash
+/products-parser-20250317/Products parser test.postman_collection.json
+```
+
+---
+
+## 📬 Contato
+Caso tenha dúvidas ou sugestões, entre em contato através do e-mail: `pedroalano@gmail.com`
+
+Este projeto foi desenvolvido como parte do **Backend Challenge 20230105** proposto pela **Coodesh**.  
+
+> This is a challenge by [Coodesh](https://coodesh.com/)
+
+
+
+----
+----
+----
+----
 # Backend Challenge 20230105
 
 ## Introdução
